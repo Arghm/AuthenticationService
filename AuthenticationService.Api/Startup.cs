@@ -10,14 +10,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using AuthenticationService.Api.Application.Handlers;
-using AuthenticationService.Api.Application.Middlewares;
-using AuthenticationService.Api.Application.Services.Jwt;
-using AuthenticationService.Api.Application.Services.Password;
-using AuthenticationService.Infrastructure;
-using AuthenticationService.Infrastructure.Repositories;
-using AuthenticationService.Infrastructure.Repositories.Interfaces;
 using Serilog;
+using AuthenticationService.Infrastructure.DependencyInjections;
+using AuthenticationService.Application.Services.Jwt;
+using AuthenticationService.Migrations;
+using AuthenticationService.Api.Middlewares;
+using System.Security.Claims;
+using AuthenticationService.Contracts.Authentication;
+using AuthenticationService.Api.Authorization;
 
 namespace AuthenticationService.Api
 {
@@ -35,7 +35,6 @@ namespace AuthenticationService.Api
             services.AddControllers();
             services.AddOptions();
             services.AddHttpClient();
-            services.AddMemoryCache();
 
             services.AddJwt(c =>
             {
@@ -57,6 +56,10 @@ namespace AuthenticationService.Api
                         Fields = context.ModelState.Values.SelectMany(c => c.Errors).Select(c => c.ErrorMessage)
                     });
                 };
+            })
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.IgnoreNullValues = true;
             });
 
             services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MsSql")));
@@ -71,24 +74,15 @@ namespace AuthenticationService.Api
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = JwtSettings.TokenValidationParameters();
             });
-            
-            /*
+
+
             services.AddAuthorization(options =>
             {
-                options.AddPolicyWithSuperUser(Policies.CreateUser, "DigitalChannels.ExtAuthentication", "CreateUser");
-                options.AddPolicyWithSuperUser(Policies.CreateClaim, "DigitalChannels.ExtAuthentication", "CreateClaim");
-
-                options.AddPolicyWithSuperUser(Policies.DeleteUser, "DigitalChannels.ExtAuthentication", "DeleteUser");
-                options.AddPolicyWithSuperUser(Policies.BlockUser, "DigitalChannels.ExtAuthentication", "BlockUser");
-
-                options.AddPolicyWithSuperUser(Policies.AddClaimsToUser, "DigitalChannels.ExtAuthentication", "AddClaimsToUser");
-
-                options.AddPolicyWithSuperUser(Policies.GetUserClaims, "DigitalChannels.ExtAuthentication", "GetUserClaims");
-                options.AddPolicyWithSuperUser(Policies.GetClaims, "DigitalChannels.ExtAuthentication", "GetClaims");
-                options.AddPolicyWithSuperUser(Policies.GetRoles, "DigitalChannels.ExtAuthentication", "GetRoles");
-                options.AddPolicyWithSuperUser(Policies.GetUsers, "DigitalChannels.ExtAuthentication", "GetUsers");
+                options.AddPolicyWithSuperUser(Politics.UserOperationsPolicy, ClaimTypes.UserData);
+                options.AddPolicyWithSuperUser(Politics.ReadOnlyUsersInfo, ClaimTypes.UserData, Claims.GetUsers);
+                options.AddPolicyWithSuperUser(Politics.ReadWriteUsersInfo, ClaimTypes.UserData, ClaimTypes.UserData, Claims.GetUsers, Claims.CreateUser, Claims.UpdateUser, Claims.DeleteUser);
+                options.AddPolicyWithSuperUser(Politics.ReadWriteUsersClaims, ClaimTypes.UserData, Claims.CreateClaim, Claims.GetUserClaims, Claims.AddClaimsToUser);
             });
-            */
 
             services.AddSwaggerGen(c =>
             {
@@ -129,15 +123,8 @@ namespace AuthenticationService.Api
                     ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
 
-            //services.AddSingleton<IMemoryCacheWrapper, MemoryCacheWrapper>();
-            services.AddScoped<IPasswordHasher, PasswordHasher>();
-
-            //services.AddScoped<IRoleRepository, RoleRepository>();
-            //services.AddScoped<IClaimRepository, ClaimRepository>();
-
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAccessTokenRepository, AccessTokenRepository>();
-            services.AddScoped<ISignInHandler, SignInHandler>();
+            // register auth services
+            services.AddAuthServices();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -156,7 +143,7 @@ namespace AuthenticationService.Api
             app.UseRouting();
 
             app.UseAuthentication();
-            //app.UseMiddleware<AuthorizationMiddleware>();
+
             app.UseAuthorization();
 
             app.UseSwagger();

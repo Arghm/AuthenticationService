@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using AuthenticationService.Api.Application.Handlers;
-using AuthenticationService.Infrastructure.Entities;
+using AuthenticationService.Contracts.Handlers;
+using AuthenticationService.Contracts.Models;
 
 namespace AuthenticationService.Api.Controllers
 {
@@ -13,40 +13,29 @@ namespace AuthenticationService.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ILogger _logger;
-        private readonly ISignInHandler _signInHandler;
-        public AuthController(ISignInHandler signInHandler, 
+        private readonly ILoginHandler _loginHandler;
+        public AuthController(ILoginHandler loginHandler,
             ILogger<AuthController> logger = null)
         {
-            _signInHandler = signInHandler;
+            _loginHandler = loginHandler ?? throw new ArgumentNullException(nameof(loginHandler));
             _logger = logger ?? new NullLogger<AuthController>();
         }
 
         [HttpPost]
-        [Route("sign-in")]
-        public async Task<IActionResult> SignIn([FromBody] SignInEntity request)
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel request)
         {
             try
             {
                 var ipAddress = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-                request.IpAddress = ipAddress;
-                var result = await _signInHandler.GetToken(request);
+                var result = await _loginHandler.GetToken(request);
 
                 return Ok(result);
             }
             catch(Exception e)
             {
-                throw new Exception("Ошибка авторизации", e);
+                throw new Exception("Authentication error", e);
             }
         }
-
-        // Рефреш токена оказался оверхедным для внутренних систем. Может в будущем пригодится.
-
-        //[HttpPost]
-        //[Route("refresh")]
-        //public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand request)
-        //{
-        //    var result = await _mediator.Send(request);
-        //    return Ok(result);
-        //}
     }
 }

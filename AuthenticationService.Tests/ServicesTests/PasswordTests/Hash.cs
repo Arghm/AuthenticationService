@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using AuthenticationService.Api.Application.Services.Password;
+using AuthenticationService.Application.Handlers;
 
 namespace AuthenticationService.Tests.ServicesTests.PasswordTests
 {
@@ -12,7 +12,7 @@ namespace AuthenticationService.Tests.ServicesTests.PasswordTests
         {
             var passwordHasher = new PasswordHasher();
 
-            var password = "asd567fgh";
+            var password = "qwerty12345";
 
             var result = passwordHasher.Hash(password);
             var isValid = passwordHasher.IsValid(password, result);
