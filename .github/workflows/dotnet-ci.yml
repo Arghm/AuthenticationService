@@ -18,7 +18,28 @@ jobs:
     - name: dotnet build
       run: dotnet build --configuration Development
     - name: dotnet test
-      run: dotnet test --configuration Development
-    - uses: romeovs/lcov-reporter-action@v0.2.16
-      with:
-        lcov-file: ./coverage/lcov.info
+      run: dotnet test --configuration Development --collect:"XPlat Code Coverage"
+    - name: find coverage.cobertura.xml path
+      run: find . -print | grep -i 'coverage.cobertura.xml' > COVERAGEPATH.txt
+    - name: move coverage.cobertura.xml file
+      run: |
+        COVERAGEPATH=$(<COVERAGEPATH.txt)
+        mv $COVERAGEPATH coverage.cobertura.xml
+    - name: dotnet tool install reportgenerator
+      run: dotnet tool install -g dotnet-reportgenerator-globaltool --version 4.8.11
+    - name: make coverage report directory
+      run: mkdir Tools/coveragereport
+    - name: generate coverage report
+      run: reportgenerator "-reports:coverage.cobertura.xml" "-targetdir:Tools/coveragereport" -reporttypes:Html
+    - name: coverage.xml
+      run: |
+        grep -o -E -m 1 'line-rate=\"[.0-9]+\"' coverage.cobertura.xml | head -1 > line-rate.txt
+        grep -o -E -m 1 '[.0-9]{1,6}' line-rate.txt | head -1 > line-rate2.txt
+        LINERATE=$(<line-rate2.txt)
+        echo "$LINERATE * 100" | bc > line-percentage.txt
+        grep -o -E -m 1 '[0-9]+.[0-9]{0,2}' line-percentage.txt | head -1 > line-percentage2.txt
+        LINEPERCENTAGE=$(<line-percentage2.txt)
+        echo '<?xml version="1.0" encoding="utf-8"?>' > coverage.xml
+        echo '<coverage line-rate-percentage="'$LINEPERCENTAGE'%" />' >> coverage.xml
+    - name: move coverage.xml
+      run: mv coverage.xml Tools/coveragereport/coverage.xml
