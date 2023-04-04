@@ -1,13 +1,13 @@
 ﻿using System;
 using FluentAssertions;
-using NUnit.Framework;
 using AuthenticationService.Application.Handlers;
+using Xunit;
 
 namespace AuthenticationService.Tests.ServicesTests.PasswordTests
 {
     public class Hash
     {
-        [Test]
+        [Fact]
         public void Hash_Ok()
         {
             var passwordHasher = new PasswordHasher();
@@ -21,7 +21,7 @@ namespace AuthenticationService.Tests.ServicesTests.PasswordTests
             result.Should().NotBeEmpty();
         }
 
-        [Test]
+        [Fact]
         public void Hash_ThrowsArgumentException_WhenPasswordHasWhiteSpace()
         {
             var passwordHasher = new PasswordHasher();
@@ -33,12 +33,12 @@ namespace AuthenticationService.Tests.ServicesTests.PasswordTests
             result.Should().Throw<ArgumentException>();
         }
 
-        [Test]
+        [Fact]
         public void Hash_ThrowsArgumentException_WhenPasswordIsNull()
         {
             var passwordHasher = new PasswordHasher();
 
-            string password = null;
+            string? password = null;
 
             Action result = () => passwordHasher.Hash(password);
 

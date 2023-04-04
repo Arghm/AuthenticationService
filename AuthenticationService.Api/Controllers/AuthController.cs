@@ -27,8 +27,8 @@ namespace AuthenticationService.Api.Controllers
         {
             try
             {
-                var ipAddress = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-                var result = await _loginHandler.GetToken(request);
+                string ipAddress = HttpContext.Connection?.RemoteIpAddress?.MapToIPv4()?.ToString();
+                TokenModel result = await _loginHandler.GetToken(request);
 
                 return Ok(result);
             }

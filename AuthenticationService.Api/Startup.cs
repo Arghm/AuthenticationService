@@ -46,21 +46,24 @@ namespace AuthenticationService.Api
                 c.RefreshTokenExpiry = Configuration.GetValue<TimeSpan>("JwtOptions:RefreshTokenExpiry");
             });
 
-            services.AddMvc().ConfigureApiBehaviorOptions(c =>
-            {
-                c.InvalidModelStateResponseFactory = context =>
+            services.AddMvc()
+                .ConfigureApiBehaviorOptions(c =>
                 {
-                    return new BadRequestObjectResult(new
+                    c.InvalidModelStateResponseFactory = context =>
                     {
-                        Error = "Validation error",
-                        Fields = context.ModelState.Values.SelectMany(c => c.Errors).Select(c => c.ErrorMessage)
-                    });
-                };
-            })
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.IgnoreNullValues = true;
-            });
+                        return new BadRequestObjectResult(new
+                        {
+                            Error = "Validation error",
+                            Fields = context.ModelState.Values.SelectMany(c => c.Errors).Select(c => c.ErrorMessage)
+                        });
+                    };
+                })
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                })
+                .AddApplicationPart(typeof(Program).Assembly)
+                .AddControllersAsServices();
 
             services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MsSql")));
 

@@ -19,8 +19,7 @@ namespace AuthenticationService.Application.Handlers
 
             //TODO: implement proper hashing + salt passwords
             var saltBytes = new byte[_saltLength];
-            using var randomNumber = new RNGCryptoServiceProvider();
-            randomNumber.GetBytes(saltBytes);
+            RandomNumberGenerator.Create().GetBytes(saltBytes);
             using var deriveBytes = new Rfc2898DeriveBytes(password, saltBytes, _iterations);
             var hash = deriveBytes.GetBytes(_hashLength);
 

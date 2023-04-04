@@ -96,24 +96,20 @@ namespace AuthenticationService.Application.Handlers
 
             UserEntity existUser = null;
 
-            if (user.Id != null)
-            {
-                existUser = await _userRepository.GetUserByUserId(user.Id);
-            }
-            else if (!string.IsNullOrWhiteSpace(user.UserName))
+            existUser = await _userRepository.GetUserByUserId(user.Id);
+            if (existUser == null
+                && !string.IsNullOrWhiteSpace(user.UserName))
             {
                 existUser = await _userRepository.GetUserByUserName(user.UserName);
             }
 
-            if (existUser != null)
-            {
-                var userEntity = MapUserInfoModelToEntityForUpdate(user, existUser);
-                return await _userRepository.UpdateUser(userEntity);
-            }
-            else
+            if (existUser == null)
             {
                 throw new BadRequestException("User not found");
             }
+
+            var userEntity = MapUserInfoModelToEntityForUpdate(user, existUser);
+            return await _userRepository.UpdateUser(userEntity);
         }
 
         private void ValidateUserModel(UserModel user)

@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using AuthenticationService.Contracts.Services;
 using System.IdentityModel.Tokens.Jwt;
+using AuthenticationService.Contracts.Models;
 
 namespace AuthenticationService.Application.Services.Jwt
 {
@@ -17,15 +18,15 @@ namespace AuthenticationService.Application.Services.Jwt
             _jwtOptions = jwtOptions;
         }
 
-        public (string accessToken, DateTime expiration) GenerateToken(string id, string userName, IEnumerable<Claim> userClaims)
+        public TokenModel GenerateToken(string id, string userName, IEnumerable<Claim> userClaims)
         {
-            var accessTokenClaims = GetClaims(id, userName, userClaims);
-            var accessToken = GenerateAccessToken(accessTokenClaims);
+            IEnumerable<Claim> accessTokenClaims = GetClaims(id, userName, userClaims);
+            TokenModel accessToken = GenerateAccessToken(accessTokenClaims);
 
-            return (accessToken.token, accessToken.expiration);
+            return accessToken;
         }
 
-        private (string token, DateTime expiration) GenerateAccessToken(IEnumerable<Claim> claims)
+        private TokenModel GenerateAccessToken(IEnumerable<Claim> claims)
         {
             var expiration = DateTime.UtcNow.Add(_jwtOptions.AccessTokenExpiry);
 
@@ -40,7 +41,7 @@ namespace AuthenticationService.Application.Services.Jwt
 
             var accessToken = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            return (accessToken, expiration);
+            return new TokenModel { AccessToken = accessToken, Expiration = expiration };
         }
 
         private IEnumerable<Claim> GetClaims(string id, string userName, IEnumerable<Claim> userClaims = null)

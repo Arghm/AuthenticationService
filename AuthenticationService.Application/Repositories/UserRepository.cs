@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AuthenticationService.Contracts.Models;
 using AuthenticationService.Contracts.Repositories;
@@ -34,7 +35,7 @@ namespace AuthenticationService.Application.Repositories
                     .ThenInclude(c => c.Role)
                     .Include(c => c.Claims)
                     .ThenInclude(c => c.Claim)
-                    .SingleOrDefaultAsync(c => c.NormalizedUserName == userName.ToUpper());
+                    .SingleOrDefaultAsync(c => c.NormalizedUserName == userName);
 
                 return user;
             }

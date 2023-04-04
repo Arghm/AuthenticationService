@@ -53,32 +53,26 @@ namespace AuthenticationService.Application.Handlers
 
             var claims = CollectUserClaims(user);
 
-            var accessToken = _jwtService.GenerateToken(user.Id.ToString(), user.UserName, claims);
-
-            var token = new TokenModel
-            {
-                AccessToken = accessToken.accessToken,
-                Expiration = accessToken.expiration
-            };
-             
-            var accessTokenEntity = new AccessTokenEntity
-            {
-                token = accessToken.accessToken,
-                Expired = accessToken.expiration,
-                //User = user,
-                UserId = user.Id
-            };
-
             try
             {
+                TokenModel accessToken = _jwtService.GenerateToken(user.Id.ToString(), user.UserName, claims);
+             
+                var accessTokenEntity = new AccessTokenEntity
+                {
+                    token = accessToken.AccessToken,
+                    Expired = accessToken.Expiration,
+                    UserId = user.Id
+                };
+
                 await _accessTokenRepository.CreateAccessTokenAsync(accessTokenEntity);
+
+                return accessToken;
             }
             catch(Exception e)
             {
                 _logger.LogError(e, "Create access token error");
                 throw;
             }
-            return token;
         }
 
         private IEnumerable<Claim> CollectUserClaims(UserEntity user)
