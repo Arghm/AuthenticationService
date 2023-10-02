@@ -4,15 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuthenticationService.Contracts.Repositories.Entities
 {
-    [Table("UserRole")]
+    [Table("user_roles")]
     public class UserRoleEntity
     {
-        [Column(TypeName = "uniqueidentifier"), Required]
+        [Column(name: "user_id", TypeName = "uuid"), Required]
         public Guid UserId { get; set; }
 
         public UserEntity User { get; set; }
 
-        [Column(TypeName = "uniqueidentifier"), Required]
+        [Column(name: "roles_id", TypeName = "uuid"), Required]
         public Guid RoleId { get; set; }
 
         public RoleEntity Role { get; set; }

@@ -4,28 +4,28 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuthenticationService.Contracts.Repositories.Entities
 {
-    [Table("AccessToken")]
+    [Table("access_tokens")]
     public class AccessTokenEntity
     {
-        [Column(TypeName = "uniqueidentifier"), Required]
+        [Column(name: "id", TypeName = "uuid"), Required]
         public Guid Id { get; set; }
 
-        [Column(TypeName = "uniqueidentifier"), Required]
+        [Column(name: "user_id", TypeName = "uuid"), Required]
         public Guid UserId { get; set; }
 
-        [Column(TypeName = "varchar(1000)")]
+        [Column(name: "token", TypeName = "text")]
         public string token { get; set; }
 
-        [Column(TypeName = "datetime"), Required]
+        [Column(name: "expired_time", TypeName = "timestamptz"), Required]
         public DateTime Expired { get; set; }
 
-        [Column(TypeName = "datetime"), Required]
+        [Column(name: "created_time", TypeName = "timestamptz"), Required]
         public DateTime Created { get; set; }
 
-        [Column(TypeName = "varchar(255)")]
+        [Column(name: "jti", TypeName = "text")]
         public string Jti { get; set; }
 
-        [Column(TypeName = "varchar(20)")]
+        [Column(name: "ip_address", TypeName = "varchar(20)")]
         public string IpAddress { get; set; }
 
         public virtual UserEntity User { get; set; }

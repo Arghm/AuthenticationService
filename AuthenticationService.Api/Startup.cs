@@ -65,7 +65,8 @@ namespace AuthenticationService.Api
                 .AddApplicationPart(typeof(Program).Assembly)
                 .AddControllersAsServices();
 
-            services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MsSql")));
+            services.AddDbContext<AuthDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("PgSql")));
+            //.UseSqlServer(Configuration.GetConnectionString("MsSql")));
 
             services.AddAuthentication(options =>
             {

@@ -6,16 +6,16 @@ using System.Text;
 
 namespace AuthenticationService.Contracts.Repositories.Entities
 {
-    [Table("SignIn")]
+    [Table("sign_in")]
     public class SignInEntity
     {
-        [Column(TypeName = "varchar(255)"), Required]
+        [Column(name: "user_name", TypeName = "text"), Required]
         public string UserName { get; set; }
 
-        [Column(TypeName = "varchar(255)"), Required]
+        [Column(name: "password", TypeName = "text"), Required]
         public string Password { get; set; }
 
-        [Column(TypeName = "varchar(255)"), MaxLength(20)]
+        [Column(name: "ip_address", TypeName = "text"), MaxLength(20)]
         public string IpAddress { get; set; }
 
         public SignInEntity(string userName, string password, string ipAddress)

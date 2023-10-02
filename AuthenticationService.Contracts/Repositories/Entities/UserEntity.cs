@@ -5,30 +5,30 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuthenticationService.Contracts.Repositories.Entities
 {
-    [Table("User")]
+    [Table("users")]
     public class UserEntity
     {
-        [Column(TypeName = "uniqueidentifier"), Required]
+        [Column(name: "id", TypeName = "uuid"), Required]
         public Guid Id { get; set; }
 
-        [Column(TypeName = "varchar(255)"), Required]
+        [Column(name: "user_name", TypeName = "text"), Required]
         public string UserName { get; set; }
 
-        [Column(TypeName = "varchar(255)")]
+        [Column(name: "normalized_user_name", TypeName = "text")]
         public string NormalizedUserName { get; set; }
 
-        [Column(TypeName = "varchar(255)"), Required]
+        [Column(name: "password", TypeName = "text"), Required]
         public string Password { get; set; }
 
-        [Column(TypeName = "datetime"), Required]
+        [Column(name: "created_time", TypeName = "timestamptz"), Required]
         public DateTime Created { get; set; }
 
         public string[] IpAddresses { get; set; }
 
-        [Column(TypeName = "bit"), Required]
+        [Column(name: "is_active", TypeName = "bool"), Required]
         public bool IsActive { get; set; } = true;
 
-        [Column(TypeName = "bit"), Required]
+        [Column(name: "is_deleted", TypeName = "bool"), Required]
         public bool IsDeleted { get; set; } = false;
 
         public virtual ICollection<UserRoleEntity> Roles { get; set; }

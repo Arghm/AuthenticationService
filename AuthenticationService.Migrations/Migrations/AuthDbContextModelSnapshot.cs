@@ -21,56 +21,56 @@ namespace AuthenticationService.Migrations.Migrations
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.AccessTokenEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("created_time")
+                        .HasColumnType("timestamptz");
 
-                    b.Property<DateTime>("Expired")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("expired_time")
+                        .HasColumnType("timestamptz");
 
-                    b.Property<string>("IpAddress")
-                        .HasColumnType("varchar(20)");
+                    b.Property<string>("ip_address")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Jti")
-                        .HasColumnType("varchar(255)");
+                    b.Property<string>("jti")
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("user_id")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("token")
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("user_id");
 
-                    b.ToTable("AccessToken");
+                    b.ToTable("access_tokens");
                 });
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.ClaimEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("Issuer")
+                    b.Property<string>("issuer")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("text");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("claim_type")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("text");
 
-                    b.Property<string>("Value")
+                    b.Property<string>("claim_value")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.ToTable("Claim");
+                    b.ToTable("claim");
 
                     b.HasData(
                         new
@@ -140,62 +140,62 @@ namespace AuthenticationService.Migrations.Migrations
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.RefreshTokenEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("created_time")
+                        .HasColumnType("timestamptz");
 
-                    b.Property<DateTime>("Expired")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("expired_time")
+                        .HasColumnType("timestamptz");
 
-                    b.Property<bool>("IsBlocked")
-                        .HasColumnType("bit");
+                    b.Property<bool>("is_blocked")
+                        .HasColumnType("bool");
 
-                    b.Property<string>("Jti")
-                        .HasColumnType("varchar(255)");
+                    b.Property<string>("jti")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Token")
-                        .HasColumnType("varchar(255)");
+                    b.Property<string>("token")
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("user_id")
+                        .HasColumnType("uuid");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("Jti")
+                    b.HasIndex("jti")
                         .IsUnique()
                         .HasFilter("[Jti] IS NOT NULL");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("user_id");
 
-                    b.ToTable("RefreshToken");
+                    b.ToTable("refresh_tokens");
                 });
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.RoleEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("varchar(255)");
+                    b.Property<string>("role_description")
+                        .HasColumnType("text");
 
-                    b.Property<string>("NormalizeRole")
+                    b.Property<string>("normalized_role_name")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("text");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("role_name")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("NormalizeRole")
+                    b.HasIndex("normalized_role_name")
                         .IsUnique();
 
-                    b.ToTable("Role");
+                    b.ToTable("roles");
 
                     b.HasData(
                         new
@@ -216,17 +216,17 @@ namespace AuthenticationService.Migrations.Migrations
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.UserClaimEntity", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("user_id")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("ClaimId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("claim_id")
+                        .HasColumnType("uuid");
 
-                    b.HasKey("UserId", "ClaimId");
+                    b.HasKey("user_id", "claim_id");
 
-                    b.HasIndex("ClaimId");
+                    b.HasIndex("claim_id");
 
-                    b.ToTable("UserClaim");
+                    b.ToTable("user_claims");
 
                     b.HasData(
                         new
@@ -238,41 +238,41 @@ namespace AuthenticationService.Migrations.Migrations
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.UserEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("created_time")
+                        .HasColumnType("timestamptz");
 
-                    b.Property<string>("IpAddresses")
+                    b.Property<string>("ip_addresses")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<bool>("is_active")
+                        .HasColumnType("bool");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bool");
 
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("varchar(255)");
+                    b.Property<string>("normalized_user_name")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("password")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("text");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("user_name")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("NormalizedUserName")
+                    b.HasIndex("normalized_user_name")
                         .IsUnique()
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasFilter("[normalized_user_name] IS NOT NULL");
 
-                    b.ToTable("User");
+                    b.ToTable("users");
 
                     b.HasData(
                         new
@@ -301,17 +301,17 @@ namespace AuthenticationService.Migrations.Migrations
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.UserRoleEntity", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("user_id")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("role_id")
+                        .HasColumnType("uuid");
 
-                    b.HasKey("UserId", "RoleId");
+                    b.HasKey("user_id", "role_id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("role_id");
 
-                    b.ToTable("UserRole");
+                    b.ToTable("user_roles");
 
                     b.HasData(
                         new
@@ -323,83 +323,83 @@ namespace AuthenticationService.Migrations.Migrations
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.AccessTokenEntity", b =>
                 {
-                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.UserEntity", "User")
-                        .WithMany("AccessTokens")
-                        .HasForeignKey("UserId")
+                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.UserEntity", "users")
+                        .WithMany("access_tokens")
+                        .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.RefreshTokenEntity", b =>
                 {
-                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.UserEntity", "User")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
+                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.UserEntity", "users")
+                        .WithMany("refresh_tokens")
+                        .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.UserClaimEntity", b =>
                 {
-                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.ClaimEntity", "Claim")
-                        .WithMany("Users")
-                        .HasForeignKey("ClaimId")
+                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.ClaimEntity", "claims")
+                        .WithMany("users")
+                        .HasForeignKey("claim_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.UserEntity", "User")
-                        .WithMany("Claims")
-                        .HasForeignKey("UserId")
+                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.UserEntity", "users")
+                        .WithMany("claims")
+                        .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Claim");
+                    b.Navigation("claims");
 
-                    b.Navigation("User");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.UserRoleEntity", b =>
                 {
-                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.RoleEntity", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
+                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.RoleEntity", "roles")
+                        .WithMany("users")
+                        .HasForeignKey("role_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.UserEntity", "User")
-                        .WithMany("Roles")
-                        .HasForeignKey("UserId")
+                    b.HasOne("AuthenticationService.Contracts.Repositories.Entities.UserEntity", "users")
+                        .WithMany("roles")
+                        .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Role");
+                    b.Navigation("roles");
 
-                    b.Navigation("User");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.ClaimEntity", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.RoleEntity", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("AuthenticationService.Contracts.Repositories.Entities.UserEntity", b =>
                 {
-                    b.Navigation("AccessTokens");
+                    b.Navigation("access_tokens");
 
-                    b.Navigation("Claims");
+                    b.Navigation("claims");
 
-                    b.Navigation("RefreshTokens");
+                    b.Navigation("refresh_tokens");
 
-                    b.Navigation("Roles");
+                    b.Navigation("roles");
                 });
 #pragma warning restore 612, 618
         }

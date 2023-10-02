@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <Configurations>Development;Production</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

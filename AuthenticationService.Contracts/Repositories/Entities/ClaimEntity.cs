@@ -5,20 +5,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuthenticationService.Contracts.Repositories.Entities
 {
-    [Table("Claim")]
+    [Table("claims")]
     public class ClaimEntity
     {
-        [Column(TypeName = "uniqueidentifier"), Required]
+        [Column(name: "id", TypeName = "uuid"), Required]
         public Guid Id { get; set; }
 
-        [Column(TypeName = "varchar(255)"), Required]
+        [Column(name: "claim_type", TypeName = "text"), Required]
         public string Type { get; set; }
 
-        [Column(TypeName = "varchar(255)"), Required]
+        [Column(name: "claim_value", TypeName = "text"), Required]
         public string Value { get; set; }
 
 
-        [Column(TypeName = "varchar(255)"), Required]
+        [Column(name: "issuer", TypeName = "text"), Required]
         public string Issuer { get; set; }
         public virtual ICollection<UserClaimEntity> Users { get; set; }
     }

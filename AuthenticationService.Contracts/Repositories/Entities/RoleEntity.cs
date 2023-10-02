@@ -5,19 +5,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuthenticationService.Contracts.Repositories.Entities
 {
-    [Table("Role")]
+    [Table("roles")]
     public class RoleEntity
     {
-        [Column(TypeName = "uniqueidentifier"), Required]
+        [Column(name: "id", TypeName = "uuid"), Required]
         public Guid Id { get; set; }
 
-        [Column(TypeName = "varchar(255)"), Required]
+        [Column(name: "role_name", TypeName = "text"), Required]
         public string Role { get; set; }
 
-        [Column(TypeName = "varchar(255)"), Required]
+        [Column(name: "normalized_role_name", TypeName = "text"), Required]
         public string NormalizeRole { get; set; }
 
-        [Column(TypeName = "varchar(255)")]
+        [Column(name: "role_description", TypeName = "text")]
         public string Description { get; set; }
 
         public virtual ICollection<UserRoleEntity> Users { get; set; }

@@ -6,28 +6,28 @@ using System.Text;
 
 namespace AuthenticationService.Contracts.Repositories.Entities
 {
-    [Table("RefreshToken")]
+    [Table("refresh_tokens")]
     public class RefreshTokenEntity
     {
-        [Column(TypeName = "uniqueidentifier"), Required]
+        [Column(name: "id", TypeName = "uuid"), Required]
         public Guid Id { get; set; }
 
-        [Column(TypeName = "uniqueidentifier"), Required]
+        [Column(name: "user_id", TypeName = "uuid"), Required]
         public Guid UserId { get; set; }
 
-        [Column(TypeName = "varchar(255)")]
+        [Column(name: "token", TypeName = "text")]
         public string Token { get; set; }
 
-        [Column(TypeName = "datetime"), Required]
+        [Column(name: "expired_time", TypeName = "timestamptz"), Required]
         public DateTime Expired { get; set; }
 
-        [Column(TypeName = "datetime"), Required]
+        [Column(name: "created_time", TypeName = "timestamptz"), Required]
         public DateTime Created { get; set; }
 
-        [Column(TypeName = "bit")]
+        [Column(name: "is_blocked", TypeName = "bool")]
         public bool IsBlocked { get; set; }
 
-        [Column(TypeName = "varchar(255)")]
+        [Column(name: "jti", TypeName = "text")]
         public string Jti { get; set; }
 
         public virtual UserEntity User { get; set; }
